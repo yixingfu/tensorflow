@@ -12,10 +12,13 @@ import numpy as np
 
 def write_ckpt_to_h5(path_h5, path_ckpt, model_builder, use_ema=True):
   """ Map the weights in checkpoint file (tf) to h5 file (keras)
+
   
   Args:
     path_h5: str, path to the hdf5 file that records efficientnet weights from
       keras.applications implementation. It can be notop or with top. 
+      The weights will be overwritten, but the structure will remain. 
+      The h5 file should be saved weight from model created by model_builder
     path_ckpt: str, path to the ckpt files (e.g. 'efficientnet-b0/model.ckpt')
       that records efficientnet weights from original repo 
       https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet
