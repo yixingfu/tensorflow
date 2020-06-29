@@ -1,4 +1,4 @@
-EfficientNet for Transfer Learning
+# EfficientNet for Transfer Learning
 
 ## Introduction to EfficientNet
 EfficientNet, first introduced in https://arxiv.org/abs/1905.11946 is among the most efficient models (i.e. requiring least FLOPS for inference) that reaches SOTA in both imagenet and common image classification transfer learning tasks. 
@@ -30,14 +30,16 @@ This model takes input images of shape (224, 224, 3), and the input data should 
 Because training EfficientNet on imagenet takes a tremendous amount of resources and several techniques that are not a part of the model architecture itself. Hence the Keras implementation by default loads pre-trained weights with AutoAugment (https://arxiv.org/abs/1805.09501). 
 
 For B0 to B7 base models, the input shapes are different. Here is a list of input shape expected for each model:
-EfficientNetB0: 224,
-EfficientNetB1: 240,
-EfficientNetB2: 260,
-EfficientNetB3: 300,
-EfficientNetB4: 380,
-EfficientNetB5: 456,
-EfficientNetB6: 528,
-EfficientNetB7: 600
+| Base model | resolution|
+|----------------|-----|
+| EfficientNetB0 | 224 |
+| EfficientNetB1 | 240 |
+| EfficientNetB2 | 260 |
+| EfficientNetB3 | 300 |
+| EfficientNetB4 | 380 |
+| EfficientNetB5 | 456 |
+| EfficientNetB6 | 528 |
+| EfficientNetB7 | 600 |
 
 When the use of the model is intended for transfer learning, the Keras implementation provides a option to remove the top layers:
 ```
@@ -77,7 +79,7 @@ Do not use the RMSprop setup as in the original paper for transfer learning, at 
 
 Since the initial paper, the EfficientNet has been improved by various methods for data preprocessing and for using unlabelled data to enhance learning results. These improvements are relatively hard and computationally costly to reproduce, and require extra code; but the weights are readily available in the form of TF checkpoint files. The model architecture has not changed, so loading the improved checkpoints is possible.
 
-To use a checkpoint provided at (CITE), first download the checkpoint. As example, here we download noisy-student version of B1
+To use a checkpoint provided at (https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet), first download the checkpoint. As example, here we download noisy-student version of B1
 ```
 wget https://storage.googleapis.com/cloud-tpu-checkpoints/efficientnet/noisystudent/noisy_student_efficientnet-b1.tar.gz
 tar -xf noisy_student_efficientnet-b1.tar.gz
@@ -96,23 +98,4 @@ To load the new weights.
 
 
 
-Confirmed: it does converge considerably faster than from scratch. 
-Now trying: different augs (getting to 73%).
-Next up: warm up training; nestorov; Trying to recover 80% -> see what keras generator does
-
-Experimenting
-
-What work and what not:
-Smaller batch size is good for small dataset (64 better than 128), possibly because of regularizing.
-Nesterov does not help
-Warming up could make it faster, no performance improvement. 
-
-A current working case reaching 84: warm up; 30 epochs freezing; __ epochs finetuning 0.001 lr to start.  Shear __, rot __, shift __.
-
-
-Scrambling figure
-
-
-When training is significantly outperforming validation it means overfitting is getting severe. For the case of CIFAR100, using EfficientNetB0 does not have much of overfitting problem for only tuning the top layers; but when opening up all layers for fine tuning, while improving performance, the overfitting effect start to bottleneck the training as training loss drop very fast. 
-One of the approaches to cope with the situation is to reduce learning rate for the fine tuning phase as suggested in (Cite francois guide), or use other existing regularizing methods; while another [[trying]] idea is to make a phased reopening.  
 
